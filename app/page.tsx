@@ -232,6 +232,7 @@ export default function Page() {
   const [sentAt, setSentAt] = useState<Date | null>(null)
   const [sentStepLabels, setSentStepLabels] = useState<Set<string>>(new Set())
   const [followUpDoc, setFollowUpDoc] = useState<string | null>(null)
+  const [formalAttachmentDoc, setFormalAttachmentDoc] = useState<string | null>(null)
   const [caseTimeline, setCaseTimeline] = useState<TimelineStep[] | null>(null)
   const [loadingTimeline, setLoadingTimeline] = useState(false)
 
@@ -240,12 +241,14 @@ export default function Page() {
   const [loadingActions, setLoadingActions] = useState(false)
   const [loadingDocument, setLoadingDocument] = useState(false)
   const [loadingFollowUp, setLoadingFollowUp] = useState(false)
+  const [loadingFormalAttachment, setLoadingFormalAttachment] = useState(false)
 
   // Copy confirmations
   const [copiedLetter, setCopiedLetter] = useState(false)
   const [letterEverCopied, setLetterEverCopied] = useState(false)
   const [copiedFollowUp, setCopiedFollowUp] = useState(false)
   const [copiedResponseReply, setCopiedResponseReply] = useState(false)
+  const [copiedFormalAttachment, setCopiedFormalAttachment] = useState(false)
 
   // Response decoder
   const [responseText, setResponseText] = useState('')
@@ -284,6 +287,7 @@ export default function Page() {
       if (s.selectedTimelineStep) setSelectedTimelineStep(s.selectedTimelineStep)
       if (s.selectedTimelineCard) setSelectedTimelineCard(s.selectedTimelineCard)
       if (s.document) setDocument(s.document)
+      if (s.formalAttachmentDoc) setFormalAttachmentDoc(s.formalAttachmentDoc)
       if (s.sentAt) setSentAt(new Date(s.sentAt))
       if (s.sentStepLabels) setSentStepLabels(new Set(s.sentStepLabels))
       if (s.manuallyDone) setManuallyDone(new Set(s.manuallyDone))
@@ -307,6 +311,7 @@ export default function Page() {
       selectedTimelineStep,
       selectedTimelineCard,
       document,
+      formalAttachmentDoc,
       sentAt: sentAt?.toISOString() ?? null,
       sentStepLabels: [...sentStepLabels],
       manuallyDone: [...manuallyDone],
@@ -318,7 +323,7 @@ export default function Page() {
       resolvedStepLabel,
     }
     localStorage.setItem('cc_dev_state', JSON.stringify(state))
-  }, [screen, userText, explanation, actions, caseTimeline, selectedAction, selectedTimelineStep, selectedTimelineCard, document, sentAt, sentStepLabels, manuallyDone, uploadedDocs, responseBreakdown, responseText, responseReplyDoc, cumulativeDecodedContext, resolvedStepLabel])
+  }, [screen, userText, explanation, actions, caseTimeline, selectedAction, selectedTimelineStep, selectedTimelineCard, document, formalAttachmentDoc, sentAt, sentStepLabels, manuallyDone, uploadedDocs, responseBreakdown, responseText, responseReplyDoc, cumulativeDecodedContext, resolvedStepLabel])
 
   // ── Handlers ─────────────────────────────────────────────────────────────────
 
@@ -404,6 +409,7 @@ export default function Page() {
     setDocument(null)
     setSentAt(null)
     setFollowUpDoc(null)
+    setFormalAttachmentDoc(null)
     setCaseTimeline(null)
     setLoadingTimeline(false)
     setManuallyDone(new Set())
@@ -503,6 +509,32 @@ export default function Page() {
     setLoadingFollowUp(false)
   }
 
+  const handleGenerateFormalAttachment = async () => {
+    setLoadingFormalAttachment(true)
+    setError(null)
+    try {
+      const formalAction = {
+        title: 'Formal reconsideration request (PDF attachment)',
+        whatToDo: 'Generate a formal written reconsideration request to attach to the employer email. This is letter type 3b — a standalone formal document for compliance or HR teams, covering the two CIFAS markers, the structural expiry problem, and three numbered requests.',
+        whyItMatters: 'The personal email goes to the contact. This formal document goes to whoever reviews the decision officially.',
+      }
+      const enrichedUserText = responseBreakdown
+        ? `${userText}\n\nContext from previous response: ${responseBreakdown.summary} ${responseBreakdown.whatHappened}`
+        : userText
+      const res = await fetch('/api/generate-document', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userText: enrichedUserText, selectedAction: formalAction, isFollowUp: false }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Could not generate formal attachment.')
+      setFormalAttachmentDoc(data.document)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not generate formal attachment.')
+    }
+    setLoadingFormalAttachment(false)
+  }
+
   const handleCopy = (text: string, confirm: (v: boolean) => void) => {
     navigator.clipboard.writeText(text)
     confirm(true)
@@ -595,6 +627,7 @@ export default function Page() {
     setDocument(null)
     setSentAt(null)
     setFollowUpDoc(null)
+    setFormalAttachmentDoc(null)
     setLetterEverCopied(false)
     setResponseText('')
     setResponseBreakdown(null)
@@ -1053,6 +1086,43 @@ export default function Page() {
               </div>
             </div>
           )}
+
+          {/* Formal attachment — shown when main letter is generated for an employer-contact step */}
+          {document && (() => {
+            const label = (selectedTimelineStep?.label || selectedAction?.title || '').toLowerCase()
+            const isEmployerStep = label.includes('employer') || label.includes('holding') || label.includes('ybs') || label.includes('building society') || label.includes('bank')
+            if (!isEmployerStep) return null
+            return (
+              <div className="bg-[#11182b] p-4 rounded-xl border border-gray-700 space-y-3">
+                <div>
+                  <h3 className="font-medium text-white">Formal attachment (PDF)</h3>
+                  <p className="text-xs text-gray-500 mt-1">A separate formal document to attach to your email — written for compliance or HR teams who need to review the decision officially.</p>
+                </div>
+                {loadingFormalAttachment && <Spinner label="Drafting formal attachment..." />}
+                {!formalAttachmentDoc && !loadingFormalAttachment && (
+                  <button
+                    onClick={handleGenerateFormalAttachment}
+                    className="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                  >
+                    Generate formal attachment →
+                  </button>
+                )}
+                {formalAttachmentDoc && (
+                  <>
+                    <div className="bg-[#0b1020] border border-gray-800 rounded-xl p-5 max-h-48 overflow-y-auto">
+                      <LetterDisplay text={formalAttachmentDoc} />
+                    </div>
+                    <button
+                      onClick={() => handleCopy(formalAttachmentDoc, setCopiedFormalAttachment)}
+                      className="text-sm px-4 py-2 rounded-lg bg-white/[0.05] border border-gray-700 hover:border-gray-500 text-white transition-colors"
+                    >
+                      {copiedFormalAttachment ? '✓ Copied' : 'Copy attachment'}
+                    </button>
+                  </>
+                )}
+              </div>
+            )
+          })()}
 
           {/* After sent — show updated timeline so user can navigate to next step */}
           {sentAt && (
