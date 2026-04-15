@@ -1,0 +1,109 @@
+import Anthropic from '@anthropic-ai/sdk'
+import { NextResponse } from 'next/server'
+
+const client = new Anthropic()
+
+const SYSTEM = `You help UK consumers understand formal responses from employers, financial institutions, and fraud prevention organisations.
+
+Your job is to decode confusing or bureaucratic language and explain what a response actually means — calmly, clearly, and without alarm. You always have the context of the original case the user is dealing with, so your analysis should be specific to their situation, not generic.
+
+TONE AND STYLE (mandatory):
+- Calm and reassuring throughout. The user may be anxious.
+- Plain English only. No legal jargon.
+- Be specific to the user's actual case — reference the job application, the institution, the decision. Never be generic.
+- Use "you" and "your case" throughout.
+- Short sentences — 15 to 20 words maximum.
+- Never say "unfortunately" or lead with negative framing. State facts plainly.
+- Do not give legal advice.
+- If the response is vague or unhelpful, say so clearly but calmly.
+
+IMPORTANT KNOWLEDGE — RESPONSES YOU MAY ENCOUNTER IN CIFAS CASES:
+- A response from CIFAS (the SAR) will show who filed the marker, when, and what type. The filing member is the organisation the user must contact to dispute or remove the marker.
+- A response from the filing member (e.g. Monese) may confirm they are investigating, or confirm the marker has been removed. If the marker has been removed, the next step is to obtain independent CIFAS verification and notify the affected employer.
+- A response from an affected employer (e.g. a bank that withdrew a job offer) may acknowledge the situation, request more information, or indicate they are reviewing. If they confirm they are reviewing following a marker removal, the next step is to send them CIFAS verification.
+- If the filing member confirms marker removal, the replyAction should recommend: write to CIFAS to obtain a fresh confirmation that the record is clear, then send that confirmation to the employer requesting formal reconsideration.
+- The recipientOrganisation is WHO the user should write to NEXT — this may be different from who sent the current response.
+
+Return ONLY valid JSON. No markdown. No code fences. No extra text.`
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json()
+    const { responseText, userText } = body
+
+    if (!responseText?.trim()) {
+      return NextResponse.json({ error: 'Please paste the response text.' }, { status: 400 })
+    }
+
+    const caseContext = userText?.trim()
+      ? `The user's original case:\n"""\n${userText}\n"""\n\n`
+      : ''
+
+    const message = await client.messages.create({
+      model: 'claude-opus-4-6',
+      max_tokens: 1400,
+      system: SYSTEM,
+      messages: [
+        {
+          role: 'user',
+          content: `${caseContext}The user has now received the following response and wants to understand what it means:
+
+"""
+${responseText}
+"""
+
+Break this response down clearly. Be specific to their case — not generic.
+
+Return this exact JSON structure:
+{
+  "organisation": "The name of the organisation that sent this response. e.g. 'CIFAS', 'Barclays'. If unclear, use 'the organisation'.",
+
+  "recipientOrganisation": "The name of the organisation the user should NOW write to as a next step. This may be DIFFERENT from the sender. e.g. if CIFAS says to contact the filing member Monese, recipientOrganisation is 'Monese'. If the user should reply to the sender, use the same name.",
+
+  "summary": "1 to 2 sentences. The core message of this response in plain English, specific to the user's situation. What is it actually saying about their case?",
+
+  "whatItMeans": "2 to 3 sentences. What does this response mean for their specific case right now? Reference the original situation (the job application, the account closure, etc). Be honest but calm.",
+
+  "whatHappened": "1 to 2 sentences. What action or decision has the organisation taken — or not taken? Describe the factual outcome plainly.",
+
+  "keyPhrases": [
+    {
+      "original": "An exact phrase or sentence from the response that is unclear, jargon-heavy, or potentially important",
+      "translated": "What that phrase actually means in plain English, in the context of this case"
+    }
+  ],
+
+  "replyAction": "1 sentence describing the specific letter that should be drafted. Name the recipient organisation and exactly what to ask for. e.g. 'Write to Monese Ltd quoting reference 13141086, explain the marker caused your job offer to be withdrawn, and ask them to review or remove it.' Be specific."
+}
+
+Rules:
+- keyPhrases must use exact quotes from the response text.
+- Include 2 to 4 key phrases — focus on the ones most likely to cause confusion.
+- replyAction must be specific — name the organisation and exactly what to ask for.
+- Everything must be specific to this user's case, not generic advice.`,
+        },
+      ],
+    })
+
+    const raw = message.content[0]
+    if (raw.type !== 'text') throw new Error('Unexpected response type from AI')
+
+    const clean = raw.text.trim().replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '').trim()
+    let result
+    try {
+      result = JSON.parse(clean)
+    } catch {
+      const match = clean.match(/\{[\s\S]*\}/)
+      if (!match) throw new Error('Could not parse AI response as JSON')
+      result = JSON.parse(match[0])
+    }
+
+    return NextResponse.json(result)
+  } catch (err) {
+    console.error('[/api/interpret-response]', err)
+    return NextResponse.json(
+      { error: 'We could not analyse this response. Please try again.' },
+      { status: 500 }
+    )
+  }
+}
