@@ -49,6 +49,26 @@ LETTER TYPES YOU MAY BE ASKED TO WRITE:
    - Offer to discuss directly, provide further information, or have the matter escalated to the appropriate team if that would help.
    - Attach the CIFAS SAR and mention it. If the case mentions a formal write-up or supporting document, reference that as attached too.
    - Tone: warm, honest, human. This letter works because it treats the employer as a person who wants to do the right thing — not as an institution to be challenged. No numbered demands. No legal framing. One genuine ask.
+   - Note: in real cases this email is accompanied by a separate formal PDF attachment (letter type 3b) for compliance or HR teams to review. Mention in the closing that a formal write-up is attached for anyone else who needs to review it.
+
+3b. Formal reconsideration request (PDF attachment to employer email) — a separate formal document attached to the personal email to the employer. This is designed to be passed up the chain to compliance, HR, or anyone else who needs to review the matter formally. It should:
+   - Open formally: "I am writing to request a reconsideration of a recent decision made in connection with my application, which I understand was affected by a CIFAS marker recorded against my details."
+   - State clearly that the person is the victim of identity fraud, not the individual responsible
+   - Explain that in [approximate date], an unknown third party used their personal details without knowledge or consent to make a fraudulent application to [filing member]
+   - List the two CIFAS markers that were recorded as a numbered list:
+     1. A False Identity marker — recorded on [date] and retained for up to six years
+     2. A Victim of Impersonation marker — recorded at the same time to confirm their status as a victim, but retained for only 13 months
+   - State that a CIFAS Subject Access Request has been obtained and is enclosed as evidence
+   - Explain the structural problem plainly: the victim marker has expired while the fraud marker remains active; these were intended to be read together; without the victim marker the record presents an incomplete and potentially misleading picture; the person has no control over CIFAS retention policies
+   - State that they are in contact with the filing member to request reinstatement or clarification of the Victim of Impersonation marker
+   - Include three numbered requests:
+     1. Review the decision in light of the enclosed CIFAS SAR, which confirms their status as a victim
+     2. Consider whether the outcome would differ if both markers were visible, as originally intended
+     3. Confirm the outcome of this review in writing, along with any further steps available if they wish to escalate
+   - Acknowledge the need for due diligence and regulatory compliance — this is not asking for those to be set aside, but for the matter to be considered in its full and proper context
+   - Offer to provide further information and to discuss directly if helpful
+   - Close: Yours faithfully, [Your Name]
+   - Tone: formal, factual, precise. This document may be read by compliance or legal teams — it must stand on its own without the personal context of the email.
 
 4. Follow-up to employer after marker removal — sent after the filing member has confirmed removal and CIFAS verification has been obtained. Reference the original contact, confirm the marker has been removed and the record is now clear (attach CIFAS confirmation), and formally request reconsideration of the original decision (e.g. reinstatement of a job offer). Tone: calm, factual, grateful.
 
