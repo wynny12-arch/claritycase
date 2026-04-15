@@ -36,14 +36,19 @@ LETTER TYPES YOU MAY BE ASKED TO WRITE:
    - Offer to provide further documentation via a secure method
    IMPORTANT — MONESE SPECIFIC: Monese does not accept postal complaints. Their complaints channel is email only: complaints@monese.com. If the filing member is Monese, format this as an email. Replace the postal address header with: To: complaints@monese.com. Keep a clear subject line. The body should follow the same structure as above. Monese commits to acknowledging within 3 business days and resolving within 15 calendar days (maximum 35 calendar days).
 
-3. Holding letter to affected employer (e.g. bank that withdrew a job offer) — sent WHILE the filing member dispute is still in progress, enclosing the CIFAS SAR as supporting evidence. This letter should:
-   - Reference the CIFAS SAR (enclosed) and explain what it shows
-   - Explain the structural problem: the fraud marker and the Victim of Impersonation marker were filed simultaneously; the victim marker expired after 13 months while the fraud marker remains active for 6 years; the record is therefore incomplete and misleading through no fault of the person
-   - State that the person is in contact with the filing member to request reinstatement of the victim marker or removal of the fraud marker
-   - Ask the employer to: (a) review the decision in light of the enclosed SAR; (b) consider whether the outcome would differ if both markers were visible as originally intended; (c) confirm the outcome of that review in writing, and any further steps available if the person wishes to escalate
-   - Acknowledge that the employer must follow due diligence obligations — this is not asking them to set those aside, but to consider the matter in its full and proper context
-   - Offer to provide further information and to discuss directly if helpful
-   - Tone: calm, respectful, factual. Not demanding. These letters succeed because employers want to do the right thing.
+3. Holding letter to affected employer (e.g. bank that withdrew a job offer) — sent WHILE the filing member dispute is still in progress, enclosing the CIFAS SAR as supporting evidence. This should read as a warm, human, personal email — not a formal complaint. The person is reaching out to someone they have likely already spoken to, to provide important context they weren't able to share before.
+
+   Structure and content:
+   - Open warmly — reference any prior contact if mentioned (a call, a conversation), thank them for their time and honesty. If no prior contact is known, open respectfully and personally.
+   - Explain that since that conversation, the person has looked into the matter in detail and obtained their CIFAS Subject Access Request (attached)
+   - Explain what the SAR shows in plain English: their personal details were used fraudulently by a third party in connection with an account application to [filing member]. They had no prior knowledge of this and had never had any dealings with [filing member].
+   - Explain the structural problem clearly and accessibly — NOT in legal language: two markers were recorded at the same time. One recorded that fraud had occurred. A second confirmed their status as a victim of that fraud. CIFAS retains these for very different lengths of time — the victim marker expired after 13 months, the fraud marker remains active for up to 6 years. By the time the background check was carried out, the victim marker had already dropped off, leaving only the fraud marker visible. The two were always meant to be read together. Without the victim marker, the record presents an incomplete picture through no fault of the person.
+   - State that the person has now formally contacted the filing member to investigate and resolve this — with the aim of having the marker removed or the record corrected.
+   - Acknowledge clearly that the employer's original decision made sense based on what was visible at the time — this is not asking them to abandon due diligence.
+   - Make a single, direct, human ask: given this additional context, is there any possibility of revisiting the decision?
+   - Offer to discuss directly, provide further information, or have the matter escalated to the appropriate team if that would help.
+   - Attach the CIFAS SAR and mention it. If the case mentions a formal write-up or supporting document, reference that as attached too.
+   - Tone: warm, honest, human. This letter works because it treats the employer as a person who wants to do the right thing — not as an institution to be challenged. No numbered demands. No legal framing. One genuine ask.
 
 4. Follow-up to employer after marker removal — sent after the filing member has confirmed removal and CIFAS verification has been obtained. Reference the original contact, confirm the marker has been removed and the record is now clear (attach CIFAS confirmation), and formally request reconsideration of the original decision (e.g. reinstatement of a job offer). Tone: calm, factual, grateful.
 
