@@ -79,7 +79,7 @@ Return this exact JSON structure:
     }
   ],
 
-  "replyAction": "1 sentence describing the specific letter that should be drafted. Name the recipient organisation and exactly what to ask for. e.g. 'Write to Monese Ltd quoting reference 13141086, explain the marker caused your job offer to be withdrawn, and ask them to review or remove it.' Be specific."
+  "replyAction": "1 sentence describing the specific letter that should be drafted. Name the filing member (e.g. Monese) if relevant, but refer to employers generically as 'your employer' — do not name specific banks or employers. e.g. 'Write to Monese quoting your complaint reference, confirm the marker has been removed, and ask them to provide written confirmation.' or 'Reply to your employer, confirm you are happy to proceed, and thank them for reconsidering.' Be specific about the action, generic about the employer."
 }
 
 Rules:

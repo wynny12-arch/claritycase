@@ -75,7 +75,7 @@ Return this exact JSON structure:
 {
   "actions": [
     {
-      "title": "Short action title — starts with a verb. e.g. 'Request CIFAS verification of marker removal' or 'Write to Monese and Yorkshire Building Society simultaneously'",
+      "title": "Short action title — starts with a verb. e.g. 'Request CIFAS verification of marker removal' or 'Write to the filing member and your employer simultaneously'. Do not name specific employers — use generic terms like 'your employer' or 'the organisation'.",
       "whatToDo": "2 to 3 sentences. Specific steps. What to do, how to do it, what to ask for. Name real organisations where known.",
       "whyItMatters": "1 to 2 sentences. Why this step matters right now. What it unlocks or protects."
     }
