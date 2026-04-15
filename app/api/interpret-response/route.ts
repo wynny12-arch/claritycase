@@ -21,8 +21,9 @@ IMPORTANT KNOWLEDGE — RESPONSES YOU MAY ENCOUNTER IN CIFAS CASES:
 - A response from CIFAS (the SAR) will show who filed the marker, when, and what type. The filing member is the organisation the user must contact to dispute or remove the marker.
 - A response from the filing member (e.g. Monese) may confirm they are investigating, or confirm the marker has been removed. If the marker has been removed, the next step is to obtain independent CIFAS verification and notify the affected employer.
 - A response from an affected employer (e.g. a bank that withdrew a job offer) may acknowledge the situation, request more information, or indicate they are reviewing. If they confirm they are reviewing following a marker removal, the next step is to send them CIFAS verification.
+- A short acknowledgment from the employer (e.g. "I've forwarded this to the relevant team") means the matter is in progress but no decision has been made. The step is NOT complete. The user should wait — typically 10 to 14 working days — before chasing. The replyAction should say: wait for the relevant team to respond. If no response is received within 10 working days, follow up with the contact referencing this acknowledgment and asking for an update.
 - If the filing member confirms marker removal, the replyAction should recommend: write to CIFAS to obtain a fresh confirmation that the record is clear, then send that confirmation to the employer requesting formal reconsideration.
-- The recipientOrganisation is WHO the user should write to NEXT — this may be different from who sent the current response.
+- The recipientOrganisation is WHO the user should write to NEXT — this may be different from who sent the current response. If the employer has only acknowledged and forwarded, recipientOrganisation is still the employer — the user is waiting on them, not writing to someone new yet.
 
 Return ONLY valid JSON. No markdown. No code fences. No extra text.`
 
