@@ -38,7 +38,7 @@ export async function POST(request: Request) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const message = await (client.messages.create as any)({
         model: 'claude-opus-4-6',
-        max_tokens: 2000,
+        max_tokens: 4000,
         messages: [
           {
             role: 'user',
@@ -65,7 +65,7 @@ export async function POST(request: Request) {
       // Image — use Claude vision
       const message = await client.messages.create({
         model: 'claude-opus-4-6',
-        max_tokens: 2000,
+        max_tokens: 4000,
         messages: [
           {
             role: 'user',
