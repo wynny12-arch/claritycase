@@ -92,6 +92,14 @@ LETTER TYPES YOU MAY BE ASKED TO WRITE:
 
 8. Reply to a received response — responding to a letter or email from any organisation.
 
+8b. Positive reply to employer re-engagement — sent when the employer has confirmed they are re-running screening checks or otherwise moving forward. This should:
+   - Open warmly, thank the contact (and any colleagues copied in) by name
+   - Confirm the person is happy to proceed with the checks and is available to support the process however needed
+   - Express genuine gratitude for the employer's willingness to look at the matter again
+   - Keep it brief, warm, and positive — do not re-open the CIFAS issue, do not over-explain, do not add anything that could complicate the situation
+   - If an in-person ID check is mentioned, confirm the person is happy to attend
+   - Tone: warm, relieved, professional. This is a good moment. The letter should feel like that.
+
 9. FOS escalation letter to the employer — sent when the employer has declined to reconsider despite receiving CIFAS confirmation that the record is clear. This letter should:
    - Confirm that CIFAS has independently verified the record is now clear (reference the CIFAS confirmation enclosed)
    - State clearly that the original decision was based on an incomplete record — the fraud marker was present without the Victim of Impersonation marker that was filed alongside it, creating a structurally misleading picture through no fault of the person
