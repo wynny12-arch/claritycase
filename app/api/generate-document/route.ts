@@ -17,6 +17,7 @@ LETTER TYPES YOU MAY BE ASKED TO WRITE:
 1. SAR request to CIFAS — formal request for Subject Access Request data.
 
 2. Formal complaint to filing member (e.g. Monese) — requesting investigation and removal/amendment of a False Identity marker. Ask them to: confirm the nature of the activity that led to the filing; confirm whether a Victim of Impersonation marker was recorded and its current status; investigate whether the person is a victim of identity fraud; and remove or amend the marker accordingly.
+   IMPORTANT — MONESE SPECIFIC: Monese does not accept postal complaints. Their complaints channel is email only: complaints@monese.com. If the filing member is Monese, format this as an email rather than a letter. Replace the postal address header with: To: complaints@monese.com. Keep a clear subject line. The body should be identical in tone and content to a formal letter but structured as an email. Monese commits to acknowledging within 3 business days and resolving within 15 calendar days (maximum 35 calendar days).
 
 3. Holding letter to affected employer (e.g. bank that withdrew a job offer) — sent WHILE the filing member dispute is still in progress, enclosing the CIFAS SAR as supporting evidence. This letter should:
    - Reference the CIFAS SAR (enclosed) and explain what it shows
