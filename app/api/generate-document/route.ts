@@ -70,13 +70,21 @@ LETTER TYPES YOU MAY BE ASKED TO WRITE:
    - Close: Yours faithfully, [Your Name]
    - Tone: formal, factual, precise. This document may be read by compliance or legal teams — it must stand on its own without the personal context of the email.
 
-4. Follow-up to employer after marker removal — sent after the filing member has confirmed removal and CIFAS verification has been obtained. Reference the original contact, confirm the marker has been removed and the record is now clear (attach CIFAS confirmation), and formally request reconsideration of the original decision (e.g. reinstatement of a job offer). Tone: calm, factual, grateful.
+4. CIFAS verification request — sent to CIFAS after the filing member has confirmed the marker has been removed, to obtain independent written confirmation that the record is now clear. This is a short, factual letter or email that should:
+   - State that the person previously submitted a Subject Access Request (reference the CIFAS SAR reference number if known)
+   - State that the filing member (e.g. Monese) has confirmed in writing that the CIFAS marker recorded against their details has been removed (reference the filing member's complaint reference number and the removal date if known)
+   - Request that CIFAS confirm in writing that the False Identity marker has been removed from their record and that their record is now clear
+   - State that this confirmation is required to support a formal request for reconsideration with an employer whose decision was based on the now-removed marker
+   - Ask for a response within 10 working days
+   NOTE: CIFAS may handle this via their online portal rather than by post. If uncertain, instruct the user to check the CIFAS website for the appropriate contact method, and provide this as a template they can adapt for email or online submission.
 
-5. Follow-up chaser — if no response received within a reasonable time. Firmer tone, references original letter and time elapsed, requests response within 10 working days.
+5. Follow-up to employer after marker removal — sent after the filing member has confirmed removal and CIFAS verification has been obtained. Reference the original contact, confirm the marker has been removed and the record is now clear (attach CIFAS confirmation), and formally request reconsideration of the original decision (e.g. reinstatement of a job offer). Tone: calm, factual, grateful.
 
-6. Reply to a received response — responding to a letter or email from any organisation.
+6. Follow-up chaser — if no response received within a reasonable time. Firmer tone, references original letter and time elapsed, requests response within 10 working days.
 
-7. FOS escalation letter to the employer — sent when the employer has declined to reconsider despite receiving CIFAS confirmation that the record is clear. This letter should:
+7. Reply to a received response — responding to a letter or email from any organisation.
+
+8. FOS escalation letter to the employer — sent when the employer has declined to reconsider despite receiving CIFAS confirmation that the record is clear. This letter should:
    - Confirm that CIFAS has independently verified the record is now clear (reference the CIFAS confirmation enclosed)
    - State clearly that the original decision was based on an incomplete record — the fraud marker was present without the Victim of Impersonation marker that was filed alongside it, creating a structurally misleading picture through no fault of the person
    - Note that the person has engaged with this matter in good faith throughout: requesting the SAR, contacting the filing member, obtaining independent CIFAS verification, and writing to the employer at each stage
@@ -84,7 +92,7 @@ LETTER TYPES YOU MAY BE ASKED TO WRITE:
    - Invite a final response within 14 days before that referral is made
    - Tone: measured, factual, and firm — not aggressive. The bank's position is now very difficult to defend and the letter should reflect that calmly. Do not apologise, do not soften the referral threat. Simply state it as the next step.
 
-8. ICO complaint letter — sent to the Information Commissioner's Office when the underlying CIFAS data was inaccurate or incomplete. This letter should:
+9. ICO complaint letter — sent to the Information Commissioner's Office when the underlying CIFAS data was inaccurate or incomplete. This letter should:
    - Explain that a CIFAS False Identity marker was recorded alongside a Victim of Impersonation marker; the victim marker expired after 13 months while the fraud marker remained active for 6 years; the result was an incomplete and misleading record that did not reflect the person's status as a victim
    - State that this breaches UK GDPR Article 5(1)(d), which requires personal data to be accurate and kept up to date
    - Name the filing member (e.g. Monese) as the data controller responsible for the record, and CIFAS as the organisation operating the database
