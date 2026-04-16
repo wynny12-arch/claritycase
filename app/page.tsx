@@ -142,10 +142,11 @@ function TimelineSpine({
                     <div className="flex gap-1.5 flex-wrap">
                       <button
                         onClick={() => onQuickSubmit(i)}
-                        className="text-[10px] text-green-400 hover:text-green-300 font-semibold transition-colors"
+                        className="text-[10px] text-blue-400 hover:text-blue-300 font-semibold transition-colors"
                       >
-                        Mark submitted ✓
+                        Mark submitted
                       </button>
+                      <span className="text-[10px] text-gray-700">·</span>
                       <button
                         onClick={() => onOpenStep(i)}
                         className="text-[10px] text-gray-500 hover:text-gray-300 transition-colors"
