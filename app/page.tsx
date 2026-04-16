@@ -814,6 +814,14 @@ export default function Page() {
   const handleOpenStep = (i: number) => {
     const step = caseTimeline![i]
     const card = timelineCards[i]
+
+    // Returning to the step you just came from — preserve all state, just navigate back
+    if (selectedTimelineStep?.label === step.label) {
+      setScreen('activity')
+      return
+    }
+
+    // Opening a different step — reset activity state for the new step
     const activeStepsBefore = timelineCards.slice(0, i).filter(c => c.status === 'active').length
     const actionForStep = actions[activeStepsBefore] ?? actions[0]
     setSelectedTimelineStep(step)
