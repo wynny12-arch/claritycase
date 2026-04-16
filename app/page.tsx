@@ -98,6 +98,8 @@ function TimelineSpine({
           const depCard = depIdx >= 0 ? cards[depIdx] : null
           const depIsDone = depIdx < 0 || (depCard != null && (depCard.status === 'done' || manuallyDone.has(depIdx)))
           const isLocked = card.sequential && !depIsDone && !isDone
+          // A step is openable if its dependency is satisfied — regardless of whether the AI labelled it "active" or "upcoming"
+          const canOpen = !isLocked && !isDone
 
           const formType = getOnlineFormType(card.label)
           const isOnlineForm = formType !== null
@@ -122,6 +124,8 @@ function TimelineSpine({
                   ? 'border-gray-700/50 opacity-35 cursor-not-allowed'
                   : effectiveStatus === 'active'
                   ? 'border-blue-500/40 shadow-[0_0_20px_rgba(59,130,246,0.08)]'
+                  : canOpen
+                  ? 'border-blue-500/20'
                   : effectiveStatus === 'upcoming'
                   ? 'border-gray-700 opacity-40'
                   : 'border-gray-700'
@@ -132,7 +136,7 @@ function TimelineSpine({
                   <p className="text-[10px] text-gray-600 leading-snug line-clamp-2">🔒 {card.lockedReason}</p>
                 ) : isDone || sentStepLabels.has(card.label) ? (
                   <StatusBadge status={effectiveStatus} />
-                ) : card.isOpenable && isOnlineForm && onQuickSubmit ? (
+                ) : canOpen && isOnlineForm && onQuickSubmit ? (
                   <div className="space-y-1.5">
                     <p className="text-[9px] text-blue-300/70 leading-tight">Online form — no letter needed</p>
                     <div className="flex gap-1.5 flex-wrap">
@@ -150,7 +154,7 @@ function TimelineSpine({
                       </button>
                     </div>
                   </div>
-                ) : card.isOpenable ? (
+                ) : canOpen ? (
                   <button
                     onClick={() => onOpenStep(i)}
                     className="text-[10px] text-blue-400 hover:text-blue-300 font-semibold transition-colors"
