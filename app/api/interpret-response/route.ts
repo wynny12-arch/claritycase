@@ -28,7 +28,7 @@ You will encounter several types of responses in CIFAS and financial screening c
 
 Filing member responses (e.g. Monese, a bank):
 - An initial acknowledgment will include a complaint reference number and investigator details, and describe the investigation timeline. This means the complaint is registered — the marker has NOT been removed yet. The person should wait for the outcome and note their reference number.
-- A marker removal confirmation is a separate, later email. It will confirm specific marker(s) removed, give a removal date, and often tell the user to reconfirm with CIFAS directly. This is the trigger to move: obtain CIFAS verification immediately and forward the removal confirmation to the employer as an interim update.
+- A marker removal confirmation is a separate, later email. It will confirm specific marker(s) removed, give a removal date, and often tell the user to reconfirm with CIFAS directly. This is the trigger to move: obtain CIFAS verification immediately and forward the removal confirmation to the employer as an interim update. CIFAS verification is done online at cifas.org.uk by submitting a fresh SAR (free) — when writing the replyAction, say to submit a fresh SAR online at cifas.org.uk, not to write a letter.
 
 CIFAS SAR responses:
 - Will show who filed the marker, when, and what type. The filing member named is who the person must write to.

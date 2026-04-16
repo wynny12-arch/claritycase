@@ -994,13 +994,32 @@ export default function Page() {
     const currentAction = selectedAction || actions[0]
     // Use the step that was explicitly opened — not just the first active step
     const currentStep = selectedTimelineStep
-    const isSARStep = (() => {
-      const label = (selectedTimelineStep?.label || selectedAction?.title || '').toLowerCase()
-      const hasSARKeyword = label.includes('sar') || label.includes('subject access')
-      // Only trigger for the initial SAR request step — not CIFAS verification or confirmation steps
-      const isVerificationStep = label.includes('verif') || label.includes('confirm') || label.includes('removal') || label.includes('clear')
-      return hasSARKeyword && !isVerificationStep
+    const stepLabel = (selectedTimelineStep?.label || selectedAction?.title || '').toLowerCase()
+
+    // Detect steps that are done via online forms rather than by generating a letter
+    const onlineFormType = (() => {
+      // CIFAS SAR — initial request (contains SAR/subject access, not about verifying removal)
+      if ((stepLabel.includes('sar') || stepLabel.includes('subject access')) &&
+          !stepLabel.includes('verif') && !stepLabel.includes('confirm') && !stepLabel.includes('removal')) {
+        return 'cifas-sar' as const
+      }
+      // CIFAS verification — confirming the marker has been removed
+      if (stepLabel.includes('cifas') && (stepLabel.includes('verif') || stepLabel.includes('confirm') || stepLabel.includes('removal'))) {
+        return 'cifas-verify' as const
+      }
+      // Financial Ombudsman Service
+      if (stepLabel.includes('fos') || stepLabel.includes('financial ombudsman') || stepLabel.includes('ombudsman')) {
+        return 'fos' as const
+      }
+      // Information Commissioner's Office
+      if (stepLabel.includes('ico') || stepLabel.includes('information commissioner')) {
+        return 'ico' as const
+      }
+      return null
     })()
+
+    const isOnlineFormStep = onlineFormType !== null
+    const isSARStep = onlineFormType === 'cifas-sar' // kept for backward compat with mark-as-submitted context
 
     return (
       <div className="min-h-screen bg-[#0b1020]">
@@ -1028,16 +1047,42 @@ export default function Page() {
               <h3 className="font-medium text-white mb-2">What to do</h3>
               <p className="text-gray-400 text-sm leading-relaxed mb-4">{currentAction.whatToDo}</p>
 
-              {isSARStep ? (
+              {isOnlineFormStep ? (
                 <div className="space-y-3">
                   <div className="bg-blue-500/[0.08] border border-blue-500/20 rounded-xl px-4 py-3 space-y-2">
                     <p className="text-sm text-white font-medium">This is done online — no letter needed</p>
-                    <ol className="text-sm text-gray-400 leading-relaxed space-y-1 list-decimal list-inside">
-                      <li>Go to <span className="text-blue-400">cifas.org.uk</span></li>
-                      <li>Find the <strong className="text-gray-300">Subject Access Request</strong> section</li>
-                      <li>Complete the online form — it is <strong className="text-gray-300">free</strong></li>
-                      <li>Expect your report within <strong className="text-gray-300">30 days</strong> (often much faster)</li>
-                    </ol>
+                    {onlineFormType === 'cifas-sar' && (
+                      <ol className="text-sm text-gray-400 leading-relaxed space-y-1 list-decimal list-inside">
+                        <li>Go to <span className="text-blue-400">cifas.org.uk</span></li>
+                        <li>Find the <strong className="text-gray-300">Subject Access Request</strong> section</li>
+                        <li>Complete the online form — it is <strong className="text-gray-300">free</strong></li>
+                        <li>Expect your report within <strong className="text-gray-300">30 days</strong> (often much faster)</li>
+                      </ol>
+                    )}
+                    {onlineFormType === 'cifas-verify' && (
+                      <ol className="text-sm text-gray-400 leading-relaxed space-y-1 list-decimal list-inside">
+                        <li>Go to <span className="text-blue-400">cifas.org.uk</span></li>
+                        <li>Submit a fresh <strong className="text-gray-300">Subject Access Request</strong> — it is <strong className="text-gray-300">free</strong></li>
+                        <li>The new report will confirm the marker has been removed</li>
+                        <li>Keep the report — it is your documentary evidence to send to your employer</li>
+                      </ol>
+                    )}
+                    {onlineFormType === 'fos' && (
+                      <ol className="text-sm text-gray-400 leading-relaxed space-y-1 list-decimal list-inside">
+                        <li>Go to <span className="text-blue-400">financial-ombudsman.org.uk</span></li>
+                        <li>Use the <strong className="text-gray-300">online complaint form</strong> — it is <strong className="text-gray-300">free</strong></li>
+                        <li>Explain how the employer made a decision based on inaccurate CIFAS data</li>
+                        <li>Attach your CIFAS verification and any correspondence as evidence</li>
+                      </ol>
+                    )}
+                    {onlineFormType === 'ico' && (
+                      <ol className="text-sm text-gray-400 leading-relaxed space-y-1 list-decimal list-inside">
+                        <li>Go to <span className="text-blue-400">ico.org.uk</span></li>
+                        <li>Use the <strong className="text-gray-300">online complaint form</strong> — it is <strong className="text-gray-300">free</strong></li>
+                        <li>State that your personal data was inaccurate under UK GDPR Article 5(1)(d)</li>
+                        <li>Attach the CIFAS SAR and removal confirmation as evidence</li>
+                      </ol>
+                    )}
                   </div>
                   <button
                     onClick={() => {
@@ -1047,7 +1092,7 @@ export default function Page() {
                         lettersSent: true,
                         completedStepLabel: resolvedStepLabel ?? undefined,
                         decodedResponseContext: selectedTimelineStep
-                          ? `The CIFAS SAR has been submitted online for the step "${selectedTimelineStep.label}". Still awaiting the SAR report — keep this step as "active".`
+                          ? `The online form for the step "${selectedTimelineStep.label}" has been submitted. Still awaiting the response — keep this step as "active".`
                           : undefined,
                       })
                     }}
