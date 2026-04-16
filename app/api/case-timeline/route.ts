@@ -84,6 +84,13 @@ Before building the timeline, reason through:
 
 Then produce a specific, ordered list of steps. Each step must name the real organisations and documents involved — not generic placeholders. Mark steps that are done, the current active step(s), and steps still to come.
 
+ADAPTING TO RESPONSE OUTCOMES:
+The decoded response context may include an explicit OUTCOME signal. Use it to determine what happens next:
+- OUTCOME: POSITIVE — the step progressed as expected. Mark it done, advance to the next logical step in the workflow.
+- OUTCOME: BLOCKED — the organisation refused or cannot help. Mark the step done (a final response was received), but the normal path after it is closed. Replace the next steps with the appropriate alternative route: ICO complaint (data accuracy, online at ico.org.uk), FOS complaint (how the employer used the data, online at financial-ombudsman.org.uk), or both. Do not show the standard next steps (e.g. CIFAS verification) if the blocked filing member means those are now irrelevant.
+- OUTCOME: PENDING — a holding response only. The step is NOT done. Keep it active. Do not advance.
+If no OUTCOME signal is present, infer from the context what has happened and act accordingly.
+
 STATUS RULES — apply these carefully:
 - A step is "done" only if there is clear evidence it was completed (a document confirms it, or the progress context explicitly confirms it). Do not guess.
 - Sending a letter does NOT complete a step. A step completes when a meaningful response has been received and resolved.

@@ -37,7 +37,8 @@ Employer responses:
 - A short acknowledgment ("I've forwarded this to the relevant team") means the matter is in progress but no decision has been made. This step is NOT complete. Advise the person to wait 10 to 14 working days before following up.
 - A second acknowledgment (after a further update has been sent) follows the same pattern — wait, then chase if no reply within 10 working days.
 - A positive re-engagement response ("we've had approval to progress you") is near-resolution. Screening checks still need to pass, but the employer has moved in the person's favour. The next step is a warm, grateful reply — do not revisit the CIFAS issue, focus on progressing smoothly.
-- A refusal despite a clean CIFAS record opens two escalation routes: Financial Ombudsman Service (how the employer used the data) and Information Commissioner's Office (accuracy of the data under UK GDPR Article 5(1)(d)). Only recommend these when direct routes are genuinely exhausted.
+- A refusal from the filing member (e.g. "we have reviewed this and the marker will remain") means the complaint has been rejected. Outcome: blocked. The next steps are: (1) submit a complaint to the ICO (ico.org.uk, free online form) challenging the data accuracy under UK GDPR Article 5(1)(d), and (2) if an employer also refused, the Financial Ombudsman Service (financial-ombudsman.org.uk, free online form) challenges how the employer used the data.
+- A refusal from an employer despite a clean CIFAS record: outcome is blocked. The next steps are FOS and/or ICO as above. Only recommend escalation when direct routes are genuinely exhausted.
 
 The recipientOrganisation is WHO the user should write to NEXT. If the employer has acknowledged and forwarded internally, the user is still waiting on the employer — not writing to a new party.
 
@@ -79,6 +80,8 @@ Return this exact JSON structure:
 
   "recipientOrganisation": "The name of the organisation the user should NOW write to as a next step. This may be DIFFERENT from the sender. e.g. if CIFAS says to contact the filing member Monese, recipientOrganisation is 'Monese'. If the user should reply to the sender, use the same name.",
 
+  "outcome": "One of three values — choose the one that best describes this response: 'positive' (the step is progressing or resolved in the user's favour — e.g. marker removed, employer reconsidering, complaint acknowledged and under investigation), 'blocked' (the organisation has refused, upheld a decision, or said they cannot help — the normal path is closed and a different route is needed), or 'pending' (a holding response — acknowledged but no decision made yet, the user is still waiting).",
+
   "summary": "1 to 2 sentences. The core message of this response in plain English, specific to the user's situation. What is it actually saying about their case?",
 
   "whatItMeans": "2 to 3 sentences. What does this response mean for their specific case right now? Reference the original situation (the job application, the account closure, etc). Be honest but calm.",
@@ -92,7 +95,7 @@ Return this exact JSON structure:
     }
   ],
 
-  "replyAction": "1 sentence describing the specific letter that should be drafted. Name the filing member (e.g. Monese) if relevant, but refer to employers generically as 'your employer' — do not name specific banks or employers. e.g. 'Write to Monese quoting your complaint reference, confirm the marker has been removed, and ask them to provide written confirmation.' or 'Reply to your employer, confirm you are happy to proceed, and thank them for reconsidering.' Be specific about the action, generic about the employer."
+  "replyAction": "1 sentence describing the specific next action. For 'positive' or 'pending' outcomes: name who to write to and what to say. For 'blocked' outcomes: describe the escalation route clearly (e.g. 'Submit a complaint to the Financial Ombudsman Service online at financial-ombudsman.org.uk — this challenges how your employer used the CIFAS data'). Name the filing member (e.g. Monese) if relevant, but refer to employers generically as 'your employer'. Be specific about the action."
 }
 
 Rules:

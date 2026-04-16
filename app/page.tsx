@@ -558,12 +558,30 @@ export default function Page() {
       if (!res.ok) throw new Error(data.error || 'Could not analyse this response.')
       setResponseBreakdown(data)
       setScreen('response')
-      const resolvedCtx = `A response from ${data.organisation} has been received and decoded. This resolves the step: "${selectedTimelineStep?.label || 'the current step'}". Only that specific step is now complete. Any other parallel steps that have not been explicitly confirmed as done must remain active. The next action on this track is: ${data.replyAction}`
+
+      const outcome: string = data.outcome ?? 'positive'
+      const stepLabel = selectedTimelineStep?.label || 'the current step'
+
+      // Build context that tells the timeline AI exactly what happened and what path to take next
+      let resolvedCtx: string
+      if (outcome === 'blocked') {
+        resolvedCtx = `A response from ${data.organisation} has been received for the step "${stepLabel}". OUTCOME: BLOCKED — the organisation has refused or cannot help. This step is now done (a final response was received) but the normal path is closed. The case must now take a different route. ${data.replyAction} Any other parallel steps that have not been explicitly confirmed done must remain active.`
+      } else if (outcome === 'pending') {
+        resolvedCtx = `A response from ${data.organisation} has been received for the step "${stepLabel}". OUTCOME: PENDING — this is a holding response, no decision has been made. This step is NOT yet complete — keep it active. The next action is: ${data.replyAction}`
+      } else {
+        // positive
+        resolvedCtx = `A response from ${data.organisation} has been received and resolved the step "${stepLabel}" in the user's favour. OUTCOME: POSITIVE. Any other parallel steps not explicitly confirmed done must remain active. The next action on this track is: ${data.replyAction}`
+      }
+
       setCumulativeDecodedContext(resolvedCtx)
-      setResolvedStepLabel(selectedTimelineStep?.label ?? null)
+
+      // Only mark step as done if the response was NOT a holding/pending response
+      const shouldMarkDone = outcome !== 'pending'
+      if (shouldMarkDone) setResolvedStepLabel(selectedTimelineStep?.label ?? null)
+
       fetchTimeline({
         lettersSent: !!sentAt,
-        completedStepLabel: selectedTimelineStep?.label,
+        completedStepLabel: shouldMarkDone ? selectedTimelineStep?.label : undefined,
         decodedResponseContext: resolvedCtx,
       })
     } catch (err) {
