@@ -101,15 +101,17 @@ STATUS RULES — apply these carefully:
 - If the decoded context mentions a marker removal date, the filing member track is resolved — advance to CIFAS verification on that track, but keep any unresolved employer track active.
 
 DOCUMENT INFERENCE — be precise, not generous:
-- Mark the SAR request as "done" only if a document name clearly indicates a CIFAS SAR response (e.g. "CIFAS SAR", "subject access response", "CIFAS data report")
-- Mark the filing member step as "done" only if a document shows a response FROM the filing member that resolved the complaint
-- Mark the employer step as "done" only if a document shows the employer has made a decision or formally responded
-- When in doubt, keep the step "active"
+- Mark the SAR request as "done" only if a document name clearly indicates a CIFAS SAR response received (e.g. "CIFAS SAR", "subject access response", "CIFAS data report")
+- Mark the filing member complaint step as "done" only if a document shows a substantive response FROM the filing member (e.g. removal confirmation, complaint resolution)
+- CRITICAL — employer documents: a letter or email FROM the employer (e.g. "job offer withdrawal", "offer withdrawn", "screening result") is the STARTING CONDITION of the case — it is why the person is here. It does NOT mean the "write to employer" step has been completed. Never mark the employer contact step as done because of a document the employer sent before the case began.
+- The "write to employer" step is only done if the person has sent a letter TO the employer AND received a meaningful response back — the employer withdrawal letter is NOT this.
+- When in doubt, keep the step "active" or "upcoming" based on where the workflow actually is.
 
 PARALLEL TRACK DISCIPLINE:
 - Never collapse a parallel track just because the other track advanced
 - If two steps share the same dependsOnStep, they unlock together and can both be active at the same time
 - They do not depend on each other — only on the shared prior step
+- CRITICAL — do not make employer contact parallel to the initial SAR request. The employer contact step (writing a holding letter to the employer) always depends on the SAR being reviewed first. It should NEVER be active at the same time as "Request SAR from CIFAS" — it only unlocks after the SAR has been received and reviewed.
 
 LABEL DISCIPLINE:
 - Initial SAR step: use "SAR" or "Subject Access Request" in the label (e.g. "Request SAR from CIFAS")

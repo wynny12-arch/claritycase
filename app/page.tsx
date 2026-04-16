@@ -65,16 +65,28 @@ interface TimelineCard {
   dependsOnStep: number | null
 }
 
+// Shared helper — used in both TimelineSpine and the activity screen
+function getOnlineFormType(label: string): 'cifas-sar' | 'cifas-verify' | 'fos' | 'ico' | null {
+  const l = label.toLowerCase()
+  if ((l.includes('sar') || l.includes('subject access')) && !l.includes('verif') && !l.includes('confirm') && !l.includes('removal')) return 'cifas-sar'
+  if (l.includes('cifas') && (l.includes('verif') || l.includes('confirm') || l.includes('removal'))) return 'cifas-verify'
+  if (l.includes('fos') || l.includes('financial ombudsman') || l.includes('ombudsman')) return 'fos'
+  if (l.includes('ico') || l.includes('information commissioner')) return 'ico'
+  return null
+}
+
 function TimelineSpine({
   cards,
   manuallyDone,
   sentStepLabels,
   onOpenStep,
+  onQuickSubmit,
 }: {
   cards: TimelineCard[]
   manuallyDone: Set<number>
   sentStepLabels: Set<string>
   onOpenStep: (i: number) => void
+  onQuickSubmit?: (i: number) => void
 }) {
   return (
     <div>
@@ -86,6 +98,9 @@ function TimelineSpine({
           const depCard = depIdx >= 0 ? cards[depIdx] : null
           const depIsDone = depIdx < 0 || (depCard != null && (depCard.status === 'done' || manuallyDone.has(depIdx)))
           const isLocked = card.sequential && !depIsDone && !isDone
+
+          const formType = getOnlineFormType(card.label)
+          const isOnlineForm = formType !== null
 
           const dotStyle = isLocked
             ? 'bg-[#0b1020] border-gray-700'
@@ -115,7 +130,27 @@ function TimelineSpine({
                 <p className="text-[11px] text-white font-medium leading-snug line-clamp-3 min-h-[2.75rem] mb-2">{card.label}</p>
                 {isLocked ? (
                   <p className="text-[10px] text-gray-600 leading-snug line-clamp-2">🔒 {card.lockedReason}</p>
-                ) : card.isOpenable && !isDone && !sentStepLabels.has(card.label) ? (
+                ) : isDone || sentStepLabels.has(card.label) ? (
+                  <StatusBadge status={effectiveStatus} />
+                ) : card.isOpenable && isOnlineForm && onQuickSubmit ? (
+                  <div className="space-y-1.5">
+                    <p className="text-[9px] text-blue-300/70 leading-tight">Online form — no letter needed</p>
+                    <div className="flex gap-1.5 flex-wrap">
+                      <button
+                        onClick={() => onQuickSubmit(i)}
+                        className="text-[10px] text-green-400 hover:text-green-300 font-semibold transition-colors"
+                      >
+                        Mark submitted ✓
+                      </button>
+                      <button
+                        onClick={() => onOpenStep(i)}
+                        className="text-[10px] text-gray-500 hover:text-gray-300 transition-colors"
+                      >
+                        How? →
+                      </button>
+                    </div>
+                  </div>
+                ) : card.isOpenable ? (
                   <button
                     onClick={() => onOpenStep(i)}
                     className="text-[10px] text-blue-400 hover:text-blue-300 font-semibold transition-colors"
@@ -769,6 +804,17 @@ export default function Page() {
     setScreen('activity')
   }
 
+  // Quick-submit for online-form steps directly from the timeline screen
+  const handleQuickSubmit = (i: number) => {
+    const step = caseTimeline![i]
+    setSentStepLabels(prev => new Set([...prev, step.label]))
+    fetchTimeline({
+      lettersSent: true,
+      completedStepLabel: resolvedStepLabel ?? undefined,
+      decodedResponseContext: `The online form for the step "${step.label}" has been submitted. Still awaiting the response — keep this step as "active".`,
+    })
+  }
+
   // ── 1. Welcome ───────────────────────────────────────────────────────────────
 
   if (screen === 'welcome') {
@@ -1108,7 +1154,7 @@ export default function Page() {
                   </p>
                 </div>
               </div>
-              <TimelineSpine cards={timelineCards} manuallyDone={manuallyDone} sentStepLabels={sentStepLabels} onOpenStep={handleOpenStep} />
+              <TimelineSpine cards={timelineCards} manuallyDone={manuallyDone} sentStepLabels={sentStepLabels} onOpenStep={handleOpenStep} onQuickSubmit={handleQuickSubmit} />
               </>
               )}
             </div>
@@ -1147,29 +1193,7 @@ export default function Page() {
     const currentAction = selectedAction || actions[0]
     // Use the step that was explicitly opened — not just the first active step
     const currentStep = selectedTimelineStep
-    const stepLabel = (selectedTimelineStep?.label || selectedAction?.title || '').toLowerCase()
-
-    // Detect steps that are done via online forms rather than by generating a letter
-    const onlineFormType = (() => {
-      // CIFAS SAR — initial request (contains SAR/subject access, not about verifying removal)
-      if ((stepLabel.includes('sar') || stepLabel.includes('subject access')) &&
-          !stepLabel.includes('verif') && !stepLabel.includes('confirm') && !stepLabel.includes('removal')) {
-        return 'cifas-sar' as const
-      }
-      // CIFAS verification — confirming the marker has been removed
-      if (stepLabel.includes('cifas') && (stepLabel.includes('verif') || stepLabel.includes('confirm') || stepLabel.includes('removal'))) {
-        return 'cifas-verify' as const
-      }
-      // Financial Ombudsman Service
-      if (stepLabel.includes('fos') || stepLabel.includes('financial ombudsman') || stepLabel.includes('ombudsman')) {
-        return 'fos' as const
-      }
-      // Information Commissioner's Office
-      if (stepLabel.includes('ico') || stepLabel.includes('information commissioner')) {
-        return 'ico' as const
-      }
-      return null
-    })()
+    const onlineFormType = getOnlineFormType(selectedTimelineStep?.label || selectedAction?.title || '')
 
     const isOnlineFormStep = onlineFormType !== null
     const isSARStep = onlineFormType === 'cifas-sar' // kept for backward compat with mark-as-submitted context
