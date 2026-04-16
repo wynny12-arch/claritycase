@@ -994,6 +994,8 @@ export default function Page() {
     const currentAction = selectedAction || actions[0]
     // Use the step that was explicitly opened — not just the first active step
     const currentStep = selectedTimelineStep
+    const isSARStep = (selectedTimelineStep?.label || selectedAction?.title || '').toLowerCase().includes('sar') ||
+      (selectedTimelineStep?.label || selectedAction?.title || '').toLowerCase().includes('subject access')
 
     return (
       <div className="min-h-screen bg-[#0b1020]">
@@ -1021,16 +1023,47 @@ export default function Page() {
               <h3 className="font-medium text-white mb-2">What to do</h3>
               <p className="text-gray-400 text-sm leading-relaxed mb-4">{currentAction.whatToDo}</p>
 
-              {loadingDocument && <Spinner label="Drafting your letter..." />}
-
-              {!document && !loadingDocument && (
-                <button
-                  onClick={() => handleGenerateDocument(currentAction)}
-                  disabled={loadingDocument}
-                  className="bg-blue-600 hover:bg-blue-500 disabled:opacity-40 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-                >
-                  Generate letter →
-                </button>
+              {isSARStep ? (
+                <div className="space-y-3">
+                  <div className="bg-blue-500/[0.08] border border-blue-500/20 rounded-xl px-4 py-3 space-y-2">
+                    <p className="text-sm text-white font-medium">This is done online — no letter needed</p>
+                    <ol className="text-sm text-gray-400 leading-relaxed space-y-1 list-decimal list-inside">
+                      <li>Go to <span className="text-blue-400">cifas.org.uk</span></li>
+                      <li>Find the <strong className="text-gray-300">Subject Access Request</strong> section</li>
+                      <li>Complete the online form — it is <strong className="text-gray-300">free</strong></li>
+                      <li>Expect your report within <strong className="text-gray-300">30 days</strong> (often much faster)</li>
+                    </ol>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setSentAt(new Date())
+                      if (selectedTimelineStep) setSentStepLabels(prev => new Set([...prev, selectedTimelineStep.label]))
+                      fetchTimeline({
+                        lettersSent: true,
+                        completedStepLabel: resolvedStepLabel ?? undefined,
+                        decodedResponseContext: selectedTimelineStep
+                          ? `The CIFAS SAR has been submitted online for the step "${selectedTimelineStep.label}". Still awaiting the SAR report — keep this step as "active".`
+                          : undefined,
+                      })
+                    }}
+                    className="text-sm px-4 py-2 rounded-lg bg-green-500/[0.12] hover:bg-green-500/[0.18] border border-green-500/30 text-green-400 font-semibold transition-colors"
+                  >
+                    Mark as submitted
+                  </button>
+                </div>
+              ) : (
+                <>
+                  {loadingDocument && <Spinner label="Drafting your letter..." />}
+                  {!document && !loadingDocument && (
+                    <button
+                      onClick={() => handleGenerateDocument(currentAction)}
+                      disabled={loadingDocument}
+                      className="bg-blue-600 hover:bg-blue-500 disabled:opacity-40 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                    >
+                      Generate letter →
+                    </button>
+                  )}
+                </>
               )}
             </div>
           )}

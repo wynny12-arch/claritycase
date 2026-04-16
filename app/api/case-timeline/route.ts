@@ -70,7 +70,7 @@ Be specific: name the actual organisations, documents, and actions involved. Do 
 
 WORKFLOW PATTERN FOR CIFAS / FALSE IDENTITY CASES:
 The correct workflow is:
-1. Request SAR from CIFAS — submit the online SAR request form via the CIFAS portal (not a letter — this is done online). Costs £10. Identifies who filed the marker and what it says. (sequential: true after case is initiated)
+1. Request SAR from CIFAS — submit the online SAR request form via the CIFAS portal (not a letter — this is done online). It is free to submit. Identifies who filed the marker and what it says. (sequential: true after case is initiated)
 2. Review SAR — identify the filing member, understand the marker details (sequential: true, needs SAR first)
 3a. Write to filing member (e.g. Monese) — formal complaint requesting investigation and removal/amendment (sequential: true, dependsOnStep: 2 — depends on SAR review. Parallel with 3b: both unlock when step 2 is done.)
 3b. Write holding letter to affected employer (the organisation that withdrew the job offer or made the decision) — enclose the CIFAS SAR, explain the victim marker expiry problem, state you are in contact with the filing member, and ask the employer to review the decision in light of the full picture. This goes BEFORE the filing member has acted. (sequential: true, dependsOnStep: 2 — same dependency as 3a. Both 3a and 3b are active simultaneously once step 2 is done. They do NOT depend on each other.)
