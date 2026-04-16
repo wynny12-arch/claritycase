@@ -555,6 +555,32 @@ export default function Page() {
     setLoadingTimeline(false)
   }
 
+  const handleNewCase = () => {
+    // Full state reset — clears everything from the previous case
+    setUserText('')
+    setError(null)
+    setExplanation(null)
+    setActions([])
+    setSelectedAction(null)
+    setSelectedTimelineStep(null)
+    setSelectedTimelineCard(null)
+    setDocument(null)
+    setSentAt(null)
+    setFollowUpDoc(null)
+    setFormalAttachmentDoc(null)
+    setCaseTimeline(null)
+    setManuallyDone(new Set())
+    setSentStepLabels(new Set())
+    setUploadedDocs([])
+    setResponseText('')
+    setResponseBreakdown(null)
+    setResponseReplyDoc(null)
+    setCumulativeDecodedContext(null)
+    setResolvedStepLabel(null)
+    localStorage.removeItem('cc_dev_state')
+    setScreen('input')
+  }
+
   const handleSubmit = async () => {
     if (!userText.trim()) return
     setError(null)
@@ -1067,7 +1093,7 @@ export default function Page() {
                 Test ⬡
               </button>
               <button
-                onClick={() => { setScreen('input') }}
+                onClick={handleNewCase}
                 className="text-xs text-gray-500 hover:text-white transition-colors border border-gray-700 hover:border-gray-500 px-3 py-1.5 rounded-lg"
               >
                 New case
