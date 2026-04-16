@@ -134,8 +134,18 @@ function TimelineSpine({
                 <p className="text-[11px] text-white font-medium leading-snug line-clamp-3 min-h-[2.75rem] mb-2">{card.label}</p>
                 {isLocked ? (
                   <p className="text-[10px] text-gray-600 leading-snug line-clamp-2">🔒 {card.lockedReason}</p>
-                ) : isDone || sentStepLabels.has(card.label) ? (
+                ) : isDone ? (
                   <StatusBadge status={effectiveStatus} />
+                ) : sentStepLabels.has(card.label) ? (
+                  <div className="flex items-center gap-2">
+                    <StatusBadge status="active" />
+                    <button
+                      onClick={() => onOpenStep(i)}
+                      className="text-[10px] text-blue-400 hover:text-blue-300 transition-colors"
+                    >
+                      Continue →
+                    </button>
+                  </div>
                 ) : canOpen && isOnlineForm && onQuickSubmit ? (
                   <div className="space-y-1.5">
                     <p className="text-[9px] text-blue-300/70 leading-tight">Online form — no letter needed</p>
