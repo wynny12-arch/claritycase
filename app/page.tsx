@@ -178,6 +178,90 @@ function StatusBadge({ status }: { status: 'done' | 'active' | 'upcoming' }) {
   return <span className="text-xs bg-gray-700/60 text-gray-500 px-2 py-1 rounded">Not started</span>
 }
 
+function SnapshotPanel({
+  show,
+  onClose,
+  snapshots,
+  snapshotName,
+  onNameChange,
+  onSave,
+  onLoad,
+  onDelete,
+}: {
+  show: boolean
+  onClose: () => void
+  snapshots: Record<string, string>
+  snapshotName: string
+  onNameChange: (v: string) => void
+  onSave: () => void
+  onLoad: (name: string) => void
+  onDelete: (name: string) => void
+}) {
+  if (!show) return null
+  const names = Object.keys(snapshots)
+  return (
+    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
+      <div className="relative bg-[#11182b] border border-gray-700 rounded-2xl p-5 w-full max-w-sm space-y-4 shadow-2xl">
+        <div className="flex items-center justify-between">
+          <p className="text-white font-semibold text-sm">Test snapshots</p>
+          <button onClick={onClose} className="text-gray-500 hover:text-white text-xs">✕</button>
+        </div>
+
+        {/* Save current state */}
+        <div className="space-y-2">
+          <p className="text-xs text-gray-500 uppercase tracking-wider">Save current state</p>
+          <div className="flex gap-2">
+            <input
+              value={snapshotName}
+              onChange={e => onNameChange(e.target.value)}
+              placeholder="Name (optional)"
+              className="flex-1 bg-[#0b1020] border border-gray-700 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-blue-500"
+              onKeyDown={e => { if (e.key === 'Enter') onSave() }}
+            />
+            <button
+              onClick={onSave}
+              className="px-3 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm rounded-lg font-medium transition-colors"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+
+        {/* Saved snapshots */}
+        {names.length > 0 && (
+          <div className="space-y-2">
+            <p className="text-xs text-gray-500 uppercase tracking-wider">Saved states</p>
+            <div className="space-y-1.5 max-h-48 overflow-y-auto">
+              {names.map(name => (
+                <div key={name} className="flex items-center gap-2 bg-[#0b1020] border border-gray-800 rounded-lg px-3 py-2">
+                  <span className="flex-1 text-sm text-gray-300 truncate">{name}</span>
+                  <button
+                    onClick={() => onLoad(name)}
+                    className="text-xs text-blue-400 hover:text-blue-300 font-medium flex-shrink-0"
+                  >
+                    Load
+                  </button>
+                  <button
+                    onClick={() => onDelete(name)}
+                    className="text-xs text-gray-600 hover:text-red-400 flex-shrink-0"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {names.length === 0 && (
+          <p className="text-xs text-gray-600 text-center py-2">No snapshots saved yet</p>
+        )}
+      </div>
+    </div>
+  )
+}
+
 function Header({ onBack, backLabel, title, right }: {
   onBack?: () => void
   backLabel?: string
@@ -263,6 +347,38 @@ export default function Page() {
   const [cumulativeDecodedContext, setCumulativeDecodedContext] = useState<string | null>(null)
   // The specific step label that was confirmed complete by a decoded response (passed as completedStepLabel in later calls)
   const [resolvedStepLabel, setResolvedStepLabel] = useState<string | null>(null)
+
+  // ── Test snapshots ────────────────────────────────────────────────────────────
+  const [showSnapshotPanel, setShowSnapshotPanel] = useState(false)
+  const [snapshots, setSnapshots] = useState<Record<string, string>>(() => {
+    if (typeof window === 'undefined') return {}
+    try { return JSON.parse(localStorage.getItem('cc_snapshots') ?? '{}') } catch { return {} }
+  })
+  const [snapshotName, setSnapshotName] = useState('')
+
+  const saveSnapshot = () => {
+    const name = snapshotName.trim() || `Snapshot ${Object.keys(snapshots).length + 1}`
+    const current = localStorage.getItem('cc_dev_state')
+    if (!current) return
+    const updated = { ...snapshots, [name]: current }
+    setSnapshots(updated)
+    localStorage.setItem('cc_snapshots', JSON.stringify(updated))
+    setSnapshotName('')
+  }
+
+  const loadSnapshot = (name: string) => {
+    const state = snapshots[name]
+    if (!state) return
+    localStorage.setItem('cc_dev_state', state)
+    window.location.reload()
+  }
+
+  const deleteSnapshot = (name: string) => {
+    const updated = { ...snapshots }
+    delete updated[name]
+    setSnapshots(updated)
+    localStorage.setItem('cc_snapshots', JSON.stringify(updated))
+  }
 
   // ── Derived ──────────────────────────────────────────────────────────────────
 
@@ -892,13 +1008,32 @@ export default function Page() {
           onBack={() => setScreen('input')}
           backLabel=""
           right={
-            <button
-              onClick={() => { setScreen('input') }}
-              className="text-xs text-gray-500 hover:text-white transition-colors border border-gray-700 hover:border-gray-500 px-3 py-1.5 rounded-lg"
-            >
-              New case
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setShowSnapshotPanel(true)}
+                className="text-xs text-gray-500 hover:text-white transition-colors border border-gray-700 hover:border-gray-500 px-3 py-1.5 rounded-lg"
+                title="Save or load test snapshots"
+              >
+                Test ⬡
+              </button>
+              <button
+                onClick={() => { setScreen('input') }}
+                className="text-xs text-gray-500 hover:text-white transition-colors border border-gray-700 hover:border-gray-500 px-3 py-1.5 rounded-lg"
+              >
+                New case
+              </button>
+            </div>
           }
+        />
+        <SnapshotPanel
+          show={showSnapshotPanel}
+          onClose={() => setShowSnapshotPanel(false)}
+          snapshots={snapshots}
+          snapshotName={snapshotName}
+          onNameChange={setSnapshotName}
+          onSave={() => { saveSnapshot(); setShowSnapshotPanel(false) }}
+          onLoad={loadSnapshot}
+          onDelete={deleteSnapshot}
         />
 
         <div className="max-w-6xl mx-auto p-6">
@@ -1045,6 +1180,25 @@ export default function Page() {
           title="Current Step"
           onBack={() => setScreen('timeline')}
           backLabel="Timeline"
+          right={
+            <button
+              onClick={() => setShowSnapshotPanel(true)}
+              className="text-xs text-gray-500 hover:text-white transition-colors border border-gray-700 hover:border-gray-500 px-3 py-1.5 rounded-lg"
+              title="Save or load test snapshots"
+            >
+              Test ⬡
+            </button>
+          }
+        />
+        <SnapshotPanel
+          show={showSnapshotPanel}
+          onClose={() => setShowSnapshotPanel(false)}
+          snapshots={snapshots}
+          snapshotName={snapshotName}
+          onNameChange={setSnapshotName}
+          onSave={() => { saveSnapshot(); setShowSnapshotPanel(false) }}
+          onLoad={loadSnapshot}
+          onDelete={deleteSnapshot}
         />
 
         <div className="max-w-3xl mx-auto p-6 space-y-4">
@@ -1337,6 +1491,25 @@ export default function Page() {
           title="Response decoded"
           onBack={() => setScreen('activity')}
           backLabel="Back"
+          right={
+            <button
+              onClick={() => setShowSnapshotPanel(true)}
+              className="text-xs text-gray-500 hover:text-white transition-colors border border-gray-700 hover:border-gray-500 px-3 py-1.5 rounded-lg"
+              title="Save or load test snapshots"
+            >
+              Test ⬡
+            </button>
+          }
+        />
+        <SnapshotPanel
+          show={showSnapshotPanel}
+          onClose={() => setShowSnapshotPanel(false)}
+          snapshots={snapshots}
+          snapshotName={snapshotName}
+          onNameChange={setSnapshotName}
+          onSave={() => { saveSnapshot(); setShowSnapshotPanel(false) }}
+          onLoad={loadSnapshot}
+          onDelete={deleteSnapshot}
         />
 
         <div className="max-w-3xl mx-auto p-6 space-y-4">
