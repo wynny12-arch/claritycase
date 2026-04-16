@@ -994,8 +994,13 @@ export default function Page() {
     const currentAction = selectedAction || actions[0]
     // Use the step that was explicitly opened — not just the first active step
     const currentStep = selectedTimelineStep
-    const isSARStep = (selectedTimelineStep?.label || selectedAction?.title || '').toLowerCase().includes('sar') ||
-      (selectedTimelineStep?.label || selectedAction?.title || '').toLowerCase().includes('subject access')
+    const isSARStep = (() => {
+      const label = (selectedTimelineStep?.label || selectedAction?.title || '').toLowerCase()
+      const hasSARKeyword = label.includes('sar') || label.includes('subject access')
+      // Only trigger for the initial SAR request step — not CIFAS verification or confirmation steps
+      const isVerificationStep = label.includes('verif') || label.includes('confirm') || label.includes('removal') || label.includes('clear')
+      return hasSARKeyword && !isVerificationStep
+    })()
 
     return (
       <div className="min-h-screen bg-[#0b1020]">
