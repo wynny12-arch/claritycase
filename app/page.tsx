@@ -825,16 +825,12 @@ export default function Page() {
   const handleOpenStep = (i: number) => {
     const step = caseTimeline![i]
     const card = timelineCards[i]
-
-    // Returning to the step you just came from — preserve all state, just navigate back
-    if (selectedTimelineStep?.label === step.label) {
-      setScreen('activity')
-      return
-    }
-
-    // Opening a different step — reset activity state for the new step
     const activeStepsBefore = timelineCards.slice(0, i).filter(c => c.status === 'active').length
     const actionForStep = actions[activeStepsBefore] ?? actions[0]
+
+    // Returning to a step that's already in progress — preserve its state
+    const isReturning = selectedTimelineStep?.label === step.label || sentStepLabels.has(step.label)
+
     setSelectedTimelineStep(step)
     setSelectedTimelineCard(card)
     setSelectedAction({
@@ -842,14 +838,18 @@ export default function Page() {
       whatToDo: step.detail,
       whyItMatters: actionForStep?.whyItMatters || step.detail,
     })
-    setDocument(null)
-    setSentAt(null)
-    setFollowUpDoc(null)
-    setFormalAttachmentDoc(null)
-    setLetterEverCopied(false)
-    setResponseText('')
-    setResponseBreakdown(null)
-    setResponseReplyDoc(null)
+
+    if (!isReturning) {
+      setDocument(null)
+      setSentAt(null)
+      setFollowUpDoc(null)
+      setFormalAttachmentDoc(null)
+      setLetterEverCopied(false)
+      setResponseText('')
+      setResponseBreakdown(null)
+      setResponseReplyDoc(null)
+    }
+
     setScreen('activity')
   }
 
